@@ -20,7 +20,7 @@ namespace DragonFlyBugTrackerNet6.Models
 
     [Display(Name = "Start Date")]
     [DataType(DataType.Date)]
-    public DateTime? StartDate { get; set; }
+    public DateTimeOffset StartDate { get; set; }
 
     [Display(Name = "End Date")]
     [DataType(DataType.Date)]

@@ -15,7 +15,7 @@ namespace DragonFlyBugTrackerNet6.Models
 
     [Display(Name ="File Date Created")]
     [DataType(DataType.Date)]
-    public DateTime? Created { get; set; }
+    public DateTimeOffset Created { get; set; }
 
     [Display(Name ="File Description")]
     public string? Description { get; set; }

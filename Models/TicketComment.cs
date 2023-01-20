@@ -18,7 +18,7 @@ namespace DragonFlyBugTrackerNet6.Models
 
     [Display(Name ="Created Date")]
     [DataType(DataType.Date)]
-    public DateTime? Created { get; set; }
+    public DateTimeOffset Created { get; set; }
 
 
     public virtual Ticket? Ticket { get; set; }

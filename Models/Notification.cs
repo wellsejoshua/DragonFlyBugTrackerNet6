@@ -19,7 +19,7 @@ namespace DragonFlyBugTrackerNet6.Models
 
     [DataType(DataType.Date)]
     [Display(Name ="Created Date")]
-    public DateTime Created { get; set; }
+    public DateTimeOffset Created { get; set; }
 
     [Required]
     [Display(Name ="Recipient")]

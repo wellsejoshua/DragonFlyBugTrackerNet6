@@ -23,7 +23,7 @@ namespace DragonFlyBugTrackerNet6.Models
 
     [Display(Name ="Date Modified")]
     [DataType(DataType.Date)]
-    public DateTime? Created { get; set; }
+    public DateTimeOffset Created { get; set; }
 
     [Display(Name = "Description")]
     public string? Description { get; set; }

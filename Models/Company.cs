@@ -15,5 +15,7 @@ namespace DragonFlyBugTrackerNet6.Models
 
     public virtual ICollection<Project> Projects { get; set; } = new HashSet<Project>();
     public virtual ICollection<AppUser> Members { get; set; } = new HashSet<AppUser>();
-  }
+    public virtual ICollection<Invite> Invites { get; set; } = new HashSet<Invite>();
+
+    }
 }
