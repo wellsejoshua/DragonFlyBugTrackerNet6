@@ -12,14 +12,14 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DragonFlyBugTrackerNet6.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220922095845_AddAppModels")]
-    partial class AddAppModels
+    [Migration("20230120045648_rebuildStartNet6")]
+    partial class rebuildStartNet6
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.9")
+                .HasAnnotation("ProductVersion", "6.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
