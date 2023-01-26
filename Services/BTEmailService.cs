@@ -31,6 +31,7 @@ namespace DragonFlyBugTrackerNet6.Services
         {
             MimeMessage email = new();
 
+
             email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
             email.To.Add(MailboxAddress.Parse(emailTo));
             email.Subject = subject;
