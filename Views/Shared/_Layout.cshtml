@@ -1,50 +1,863 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using DragonFlyBugTrackerNet6.Models.Enums
+@using DragonFlyBugTrackerNet6.Services.Interfaces
+
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+@inject IBTRolesService RolesService
+@inject IBTNotificationService NotificationService
+
+@{
+    AppUser thisbtUser = new();
+    List<Notification> notifications = new();
+}
+@if (User.Identity.IsAuthenticated)
+{
+
+    thisbtUser = await UserManager.GetUserAsync(User);
+    notifications = await NotificationService.GetReceivedNotificationsAsync(thisbtUser.Id);
+    int count = notifications.Count;
+
+    if (notifications.Count > 7)
+    {
+        if (notifications.Count == 8)
+        {
+            notifications.RemoveAt(7);
+        }
+        else
+        {
+            int numItemsRemove = count - 7;
+            notifications.RemoveRange(7, numItemsRemove);
+        }
+    }
+
+
+
+
+}
+
+
+<!DOCTYPE html>
 <html lang="en">
-<head>
+@*<head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - DragonFlyBugTrackerNet6</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/DragonFlyBugTrackerNet6.styles.css" asp-append-version="true" />
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">DragonFlyBugTrackerNet6</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    <title>@ViewData["Title"] - TheBugTracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+  </head>*@
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - DragonFlyBugTrackerNet6 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="/img/favgicon.ico">
+
+
+    @*Original Stylesheets*@
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    @*End Original Stylesheets*@
+
+
+  <title>@ViewData["Title"] - TheBugTracker</title>
+    @*Bootstrap 4.0*@
+  <link rel="stylesheet" href="~/css/bootstrap.css">
+    @*Bootstrap extend*@
+  <link rel="stylesheet" href="~/css/bootstrap-extend.css">
+    @*Morris charts*@
+  <link rel="stylesheet" href="~/css/morris.css">
+    @*Chartist*@
+  <link rel="stylesheet" href="~/css/chartist.css">
+    @*weather weather*@
+  <link rel="stylesheet" href="~/css/weather-icons.css">
+    @*theme style*@
+  <link rel="stylesheet" href="~/css/master_style.css">
+    @*skins*@
+  <link rel="stylesheet" href="~/css/skins/_all-skins.css">
+
+  <style>
+    .fa.fa-user {
+        font-size: 35px;
+    }
+
+    .fa.fa-users {
+        font-size: 35px;
+    }
+
+    .fa.fa-ticket {
+        font-size: 35px;
+    }
+
+    .fa.fa-sitemap {
+        font-size: 35px;
+    }
+
+    .fa.fa-code {
+        font-size: 35px;
+    }
+
+    .fa.fa-tags {
+        font-size: 35px;
+    }
+
+    .fa.fa-book {
+        font-size: 35px;
+    }
+
+    .fa.fa-vcard {
+        font-size: 35px;
+    }
+
+    .fa.fa-bell-o {
+        font-size: 35px;
+    }
+
+    .rounded-circle {
+        font-size: 75px;
+    }
+
+    .blue {
+        color: #398bf7;
+    }
+  </style>
+
+</head>
+
+<body class="hold-transition skin-blue-light sidebar-mini layout-boxed fixed">
+  <div class="wrapper">
+
+    <header class="main-header">
+      <!-- Logo -->
+      <a href="test.html" class="logo">
+        <!-- mini logo for sidebar mini 50x50 pixels -->
+        <b class="logo-mini">
+          <span class="light-logo"><img src="/img/cbwellls/DragonflyLog50.png" alt="logo"></span>
+          <span class="dark-logo"><img src="/img/cbwellls/DragonflyLog50.png" alt="logo"></span>
+        </b>
+        <!-- logo for regular state and mobile devices -->
+        <span class="logo-lg">
+          <img src="/img/cbwellls/DragonflyLogo300.png" alt="logo" class="light-logo">
+          <img src="/img/cbwellls/DragonflyLogo300.png" alt="logo" class="dark-logo">
+        </span>
+      </a>
+
+      <!-- Header Navbar -->
+      <nav class="navbar navbar-static-top">
+        <!-- Sidebar toggle button-->
+        <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+          <span class="sr-only">Toggle navigation</span>
+        </a>
+
+        <div class="navbar-custom-menu">
+          <ul class="nav navbar-nav">
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                <!-- Messages -->
+                <!--<li class="dropdown messages-menu">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="mdi mdi-email"></i>
+                  </a>
+                  <ul class="dropdown-menu scale-up">
+                    <li class="header">You have 5 messages</li>
+                    <li>-->
+                <!-- inner menu: contains the actual data -->
+                <!--<ul class="menu inner-content-div">
+                  <li>-->
+                <!-- start message -->
+                <!--<a href="#">
+                    <div class="pull-left">
+                      <img src="img/cbwellls/DragonflyLogo160.png" class="rounded-circle" alt="User Image">
+                    </div>
+                    <div class="mail-contnet">
+                      <h4>
+                        Lorem Ipsum
+                        <small><i class="fa fa-clock-o"></i> 15 mins</small>
+                      </h4>
+                      <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
+                    </div>
+                  </a>
+                </li>-->
+                <!-- end message -->
+                <!--<li>
+                          <a href="#">
+                            <div class="pull-left">
+                              <img src="/img/user3-128x128.jpg" class="rounded-circle" alt="User Image">
+                            </div>
+                            <div class="mail-contnet">
+                              <h4>
+                                Nullam tempor
+                                <small><i class="fa fa-clock-o"></i> 4 hours</small>
+                              </h4>
+                              <span>Curabitur facilisis erat quis metus congue viverra.</span>
+                            </div>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <div class="pull-left">
+                              <img src="/img/user4-128x128.jpg" class="rounded-circle" alt="User Image">
+                            </div>
+                            <div class="mail-contnet">
+                              <h4>
+                                Proin venenatis
+                                <small><i class="fa fa-clock-o"></i> Today</small>
+                              </h4>
+                              <span>Vestibulum nec ligula nec quam sodales rutrum sed luctus.</span>
+                            </div>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <div class="pull-left">
+                              <img src="/img/user3-128x128.jpg" class="rounded-circle" alt="User Image">
+                            </div>
+                            <div class="mail-contnet">
+                              <h4>
+                                Praesent suscipit
+                                <small><i class="fa fa-clock-o"></i> Yesterday</small>
+                              </h4>
+                              <span>Curabitur quis risus aliquet, luctus arcu nec, venenatis neque.</span>
+                            </div>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <div class="pull-left">
+                              <img src="/img/user4-128x128.jpg" class="rounded-circle" alt="User Image">
+                            </div>
+                            <div class="mail-contnet">
+                              <h4>
+                                Donec tempor
+                                <small><i class="fa fa-clock-o"></i> 2 days</small>
+                              </h4>
+                              <span>Praesent vitae tellus eget nibh lacinia pretium.</span>
+                            </div>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li class="footer"><a href="#">See all e-Mails</a></li>
+                  </ul>
+                </li>-->
+                <!-- Notifications -->
+                <li class="dropdown notifications-menu">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="mdi mdi-bell"></i>
+                  </a>
+                  <ul class="dropdown-menu scale-up">
+                    <li class="header">You have @notifications.Count notifications</li>
+                    <li>
+                      <!-- inner menu: contains the actual data -->
+                      <ul class="menu inner-content-div">
+                                            @foreach (Notification notification in notifications)
+                                            {
+                                                string message = notification.Message;
+                            <li>
+                              <a href="#">
+                                <i class="fa fa-circle-o text-aqua"></i> @message
+                              </a>
+                            </li>
+                                            }
+
+                      </ul>
+                    </li>
+                    <li class="footer"><a asp-controller="Notifications" asp-action="Index">View all</a></li>
+                  </ul>
+                </li>
+                <!-- Tasks -->
+                <!--<li class="dropdown tasks-menu">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="mdi mdi-message"></i>
+                  </a>
+                  <ul class="dropdown-menu scale-up">
+                    <li class="header">You have 6 tasks</li>
+                    <li>-->
+                <!-- inner menu: contains the actual data -->
+                <!--<ul class="menu inner-content-div">
+                  <li>-->
+                <!-- Task item -->
+                <!--<a href="#">
+                    <h3>
+                      Lorem ipsum dolor sit amet
+                      <small class="pull-right">30%</small>
+                    </h3>
+                    <div class="progress xs">
+                      <div class="progress-bar progress-bar-aqua" style="width: 30%" role="progressbar"
+                           aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                        <span class="sr-only">30% Complete</span>
+                      </div>
+                    </div>
+                  </a>
+                </li>-->
+                <!-- end task item -->
+                <!--<li>-->
+                <!-- Task item -->
+                <!--<a href="#">
+                    <h3>
+                      Vestibulum nec ligula
+                      <small class="pull-right">20%</small>
+                    </h3>
+                    <div class="progress xs">
+                      <div class="progress-bar progress-bar-danger" style="width: 20%" role="progressbar"
+                           aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                        <span class="sr-only">20% Complete</span>
+                      </div>
+                    </div>
+                  </a>
+                </li>-->
+                <!-- end task item -->
+                <!--<li>-->
+                <!-- Task item -->
+                <!--<a href="#">
+                    <h3>
+                      Donec id leo ut ipsum
+                      <small class="pull-right">70%</small>
+                    </h3>
+                    <div class="progress xs">
+                      <div class="progress-bar progress-bar-light-blue" style="width: 70%" role="progressbar"
+                           aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                        <span class="sr-only">70% Complete</span>
+                      </div>
+                    </div>
+                  </a>
+                </li>-->
+                <!-- end task item -->
+                <!--<li>-->
+                <!-- Task item -->
+                <!--<a href="#">
+                    <h3>
+                      Praesent vitae tellus
+                      <small class="pull-right">40%</small>
+                    </h3>
+                    <div class="progress xs">
+                      <div class="progress-bar progress-bar-yellow" style="width: 40%" role="progressbar"
+                           aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                        <span class="sr-only">40% Complete</span>
+                      </div>
+                    </div>
+                  </a>
+                </li>-->
+                <!-- end task item -->
+                <!--<li>-->
+                <!-- Task item -->
+                <!--<a href="#">
+                    <h3>
+                      Nam varius sapien
+                      <small class="pull-right">80%</small>
+                    </h3>
+                    <div class="progress xs">
+                      <div class="progress-bar progress-bar-red" style="width: 80%" role="progressbar"
+                           aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                        <span class="sr-only">80% Complete</span>
+                      </div>
+                    </div>
+                  </a>
+                </li>-->
+                <!-- end task item -->
+                <!--<li>-->
+                <!-- Task item -->
+                <!--<a href="#">
+                    <h3>
+                      Nunc fringilla
+                      <small class="pull-right">90%</small>
+                    </h3>
+                    <div class="progress xs">
+                      <div class="progress-bar progress-bar-primary" style="width: 90%" role="progressbar"
+                           aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                        <span class="sr-only">90% Complete</span>
+                      </div>
+                    </div>
+                  </a>
+                </li>-->
+                <!-- end task item -->
+                <!--</ul>
+                    </li>
+                    <li class="footer">
+                      <a href="#">View all tasks</a>
+                    </li>
+                  </ul>
+                </li>-->
+                <!-- User Account image size 128x128-->
+                <li class="dropdown user user-menu">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <img src="/img/user5-128x128.jpg" class="user-image rounded-circle" alt="User Image">
+                  </a>
+                  <ul class="dropdown-menu scale-up">
+                    <!-- User image -->
+                    <li class="user-header">
+                      <img src="/img/cbwellls/DragonflyLogo300.png" class="float-left rounded-circle" alt="User Image">
+
+                      <p>
+                                            @if (User.Identity.IsAuthenticated)
+                                            {
+                                            }
+
+                                            @thisbtUser.FullName;
+                        <small class="mb-5">@thisbtUser.Email</small>
+                        <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Profile" class="btn btn-danger btn-sm btn-rounded">View Profile</a>
+                      </p>
+                    </li>
+                    <!-- Menu Body -->
+                    <li class="user-body">
+                      <div class="row no-gutters">
+                        <div class="col-12 text-left">
+                          <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><i class="ion ion-person"></i> My Profile</a>
+                        </div>
+                        <div class="col-12 text-left">
+                          <a href=""><i class="ion ion-email-unread" title="Inbox"></i> Inbox</a>
+                        </div>
+                        <div role="separator" class="divider col-12"></div>
+                        <div class="col-12 text-left">
+                          <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Settings"><i class="ti-settings"></i> Account Setting</a>
+                        </div>
+                        <div role="separator" class="divider col-12"></div>
+                        <div class="col-12 text-left">
+                          <a href="javascript:document.getElementById('logoutForm').submit();" title="Logout"><i class="fa fa-power-off"></i> Logout</a>
+                        </div>
+                      </div>
+                      <!-- /.row -->
+                    </li>
+                  </ul>
+                </li>
+                        }
+          </ul>
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+      </nav>
+    </header>
+
+    <!-- Left side column. contains the logo and sidebar -->
+        @if (User.Identity.IsAuthenticated)
+        {
+
+
+        <aside class="main-sidebar">
+          <!-- sidebar -->
+          <section class="sidebar">
+            <!-- Sidebar user panel -->
+            <div class="user-panel">
+
+              <div class="ulogo">
+                <a href="index.html">
+                  <!-- logo for regular state and mobile devices -->
+                  <span><b>DragonFly </b>Bug Tracker</span>
+                </a>
+
+              </div>
+              <div class="image">
+                <img src="/img/cbwellls/defaultUserImage160 (2).png" class="rounded-circle" alt="User Image">
+              </div>
+              <div class="info">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                AppUser btUser = await UserManager.GetUserAsync(User);
+                                var roles = await RolesService.GetUserRolesAsync(btUser);
+                                foreach (string role in roles)
+                                {
+
+                        <p>Role: @role</p>
+                                }
+
+                            }
+
+                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Settings" data-original-title="Settings">
+                  <i class="ion ion-gear-b"></i>
+                </a>
+                <a asp-controller="Notifications" asp-action="Index" class="link" data-toggle="tooltip" title="Notifications Inbox" data-original-title="Email">
+                  <i class="ion ion-android-mail"></i>
+                </a>
+                <a href="javascript:document.getElementById('logoutForm').submit();" class="link" data-toggle="tooltip" title="Logout" data-original-title="Logout">
+                  <i class="ion ion-power"></i>
+                </a>
+              </div>
+            </div>
+            <!-- sidebar menu -->
+            <ul class="sidebar-menu" data-widget="tree">
+              <li class="nav-devider"></li>
+              <li class="header nav-small-cap">PERSONAL</li>
+              <li>
+                <a asp-area="" asp-controller="Home" asp-action="Dashboard">
+                  <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+                  <span class="pull-right-container">
+                    <i class="fa fa-angle-right pull-right"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a asp-controller="Notifications" asp-action="Index">
+                  <i class="fa fa-bell"></i> <span>Notification Inbox</span>
+                  <span class="pull-right-container">
+                    <i class="fa fa-angle-right pull-right"></i>
+                  </span>
+                </a>
+              </li>
+              <li class="treeview">
+                <a href="#">
+                  <i class="fa fa-th"></i>
+                  <span>Projects</span>
+                  <span class="pull-right-container">
+                    <i class="fa fa-angle-right pull-right"></i>
+                  </span>
+                </a>
+                <ul class="treeview-menu">
+                                @if (User.IsInRole(nameof(Roles.Admin)) || User.IsInRole(nameof(Roles.ProjectManager)))
+                                {
+                      <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="Create">Add Project</a></li>
+                                }
+
+                  <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="ActiveProjects"> Active Projects</a></li>
+
+                  <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="MyProjects">My Projects</a></li>
+
+
+                  <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="AllProjects">All Projects</a></li>
+                                @if (User.IsInRole(nameof(Roles.Admin)))
+                                {
+                      <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="UnassignedProjects">Unassigned Projects</a></li>
+                                }
+
+                  <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="ArchivedProjects">Project Archive</a></li>
+                </ul>
+              </li>
+              <li class="treeview">
+                <a href="#">
+                  <i class="fa fa-ticket"></i>
+                  <span>Tickets</span>
+                  <span class="pull-right-container">
+                    <i class="fa fa-angle-right pull-right"></i>
+                  </span>
+                </a>
+                <ul class="treeview-menu">
+                  <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="AllTickets">All Tickets</a></li>
+
+                  <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="MyTickets">My Tickets</a></li>
+
+                                @if (User.IsInRole(nameof(Roles.Admin)) || User.IsInRole(nameof(Roles.ProjectManager)))
+                                {
+                      <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="UnassignedTickets">Assign Tickets</a></li>
+                                }
+                  <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="Create">Add Ticket</a></li>
+                  <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="ArchivedTickets">Ticket Archive</a></li>
+                </ul>
+              </li>
+                        @*<li class="treeview">
+          <a href="#">
+          <i class="fa fa-envelope"></i> <span>Notification Inbox</span>
+          <span class="pull-right-container">
+          <i class="fa fa-angle-right pull-right"></i>
+          </span>
+          </a>
+          <ul class="treeview-menu">
+          <li><a href="#">Inbox</a></li>
+          <li><a href="#">Compose</a></li>
+          <li><a href="#">Read</a></li>
+          </ul>
+          </li>*@
+
+
+                        @if (User.IsInRole(nameof(Roles.Admin)) || User.IsInRole(nameof(Roles.ProjectManager)))
+                        {
+
+                  <li class="treeview">
+                    <a href="#">
+                      <i class="fa fa-gavel"></i> <span>Admin</span>
+                      <span class="pull-right-container">
+                        <i class="fa fa-angle-right pull-right"></i>
+                      </span>
+                    </a>
+                    <ul class="treeview-menu">
+                      <li><a class="dropdown-item" asp-area="" asp-controller="UserRoles" asp-action="ManageUserRoles">Manage Roles</a></li>
+                      <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="AssignPmProjectSelect">Assign Project Manager</a></li>
+                      <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="UnassignedTickets"> Assign Tickets</a></li>
+                                    @*<li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="AssignMembers">Assign Members To Project</a></li>*@
+                      <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="ProjectSelect">Assign Devs To Project</a></li>
+                                    @*<li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="AssignDeveloper">Assign Devs To Ticket</a></li>*@
+                      <li><a class="dropdown-item" asp-area="" asp-controller="Invites" asp-action="Create">Invite New Team Member</a></li>
+
+
+                    </ul>
+                  </li>
+                        }
+
+
+            </ul>
+          </section>
+        </aside>
+        }
+        else
+        {
+        <aside class="main-sidebar">
+          <!-- sidebar -->
+          <section class="sidebar">
+            <!-- Sidebar user panel -->
+            <div class="user-panel">
+
+              <div class="ulogo">
+                <a href="index.html">
+                  <!-- logo for regular state and mobile devices -->
+                  <span><b>DragonFly </b>Bug Tracker</span>
+                </a>
+
+              </div>
+              <div class="image">
+                <img src="/img/cbwellls/defaultUserImage160 (2).png" class="rounded-circle" alt="User Image">
+              </div>
+              <div class="row d-flex justify-content-center">
+                <div class="col-12 text-center">
+                  <partial name="_LoginPartial" />
+                </div>
+
+              </div>
+
+
+            </div>
+
+          </section>
+        </aside>
+
+        }
+
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    try
+                    {
+                        if ((this.ViewContext.RouteData?.Values["controller"]) is not null && (this.ViewContext.RouteData?.Values["action"]) is not null)
+                        {
+                            string controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
+                            string actionName = this.ViewContext.RouteData.Values["action"].ToString();
+                    <h1>
+                                @controllerName
+                      <small>@actionName</small>
+                    </h1>
+                        }
+                        else
+                        {
+                            string actionName = "Random";
+                    <h1>
+                                @actionName
+                      <small>Control panel</small>
+                    </h1>
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                        throw;
+                    }
+
+
+            <partial name="_LoginPartial" />
+            <a asp-area="" asp-controller="Tickets" asp-action="Create" class="btn btn-block btn-warning btn-round btn-outline border text-center mt-5">New ticket</a>
+                }
+                else
+                {
+                    @*<partial name="_LoginPartial" />*@
+                }
+
+
+      </section>
+
+            @RenderBody()
+
+
+
+
+    </div>
+  </div>
+
+
+
+  <!-- jQuery 3 -->
+    @*<script src="/files/jquery/dist/jquery.js"></script>*@
+  <script src="~/js/jquery.js"></script>
+
+  <!-- jQuery UI 1.11.4 -->
+    @*<script src="/files/jquery-ui/jquery-ui.js"></script>*@
+  <script src="~/js/jquery-ui.js"></script>
+
+  <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+  <script>
+    $.widget.bridge('uibutton', $.ui.button);
+  </script>
+
+  <!-- popper -->
+    @*<script src="/files/popper/dist/popper.min.js"></script>*@
+  <script src="~/js/popper.min.js"></script>
+
+  <!-- Bootstrap 4.0-->
+    @*<script src="/files/bootstrap/dist/js/bootstrap.js"></script>*@
+  <script src="~/js/bootstrap.js"></script>
+
+  <!-- Morris.js charts -->
+  <script src="~/js/raphael.min.js"></script>
+    @*<script src="/files/raphael/raphael.min.js"></script>*@
+  <script src="~/js/morris.min.js"></script>
+    @*<script src="/files/morris.js/morris.min.js"></script>*@
+
+  <!-- ChartJS -->
+  <script src="~/js/Chart.min.js"></script>
+    @*<script src="/files/chart.js-master/Chart.min.js"></script>*@
+
+  <!-- Chartist  -->
+  <script src="~/js/chartist.min.js"></script>
+    @*<script src="/files/chartist-js-develop/chartist.min.js"></script>*@
+
+  <!-- Slimscroll -->
+    @*<script src="/files/jquery-slimscroll/jquery.slimscroll.js"></script>*@
+  <script src="~/js/jquery.slimscroll.js"></script>
+
+  <!-- FastClick -->
+    @*<script src="/files/fastclick/lib/fastclick.js"></script>*@
+  <script src="~/js/fastclick.js"></script>
+
+  <!-- Lion_admin App -->
+  <script src="~/js/template.js"></script>
+
+  <!-- Lion_admin dashboard demo (This is only for demo purposes) -->
+    @*<script src="~/js/dashboard.js"></script>*@
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*<body>
+    <div class="container-fluid overflow-hidden">
+      <div class="row vh-100 overflow-auto">
+        <div class="col-12 col-sm-3 col-xl-2 px-sm-2 px-0 bg-dark d-flex sticky-top">
+          <div class="d-flex flex-sm-column flex-row flex-grow-1 align-items-center align-items-sm-start px-3 pt-2 text-white">
+            <a href="/" class="d-flex align-items-center pb-sm-3 mb-md-0 me-md-auto text-white text-decoration-none">
+              <span class="fs-5">B<span class="d-none d-sm-inline">ugTracker</span></span>
+            </a>
+            <partial name="_LoginPartial" />
+
+            @if (SignInManager.IsSignedIn(User))
+            {
+              <ul class="nav nav-pills flex-sm-column flex-row flex-nowrap flex-shrink-1 flex-sm-grow-0 flex-grow-1 mb-sm-auto mb-0 justify-content-center align-items-center align-items-sm-start" id="menu">
+                <li class="nav-item">
+                  <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link px-sm-0 px-2">
+                    <i class="fs-5 bi-house"></i><span class="ms-1 d-none d-sm-inline">Home</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a asp-area="" asp-controller="Home" asp-action="Dashboard" class="nav-link px-sm-0 px-2">
+                    <i class="fs-5 bi-house"></i><span class="ms-1 d-none d-sm-inline">Dashboard</span>
+                  </a>
+                </li>
+                <li>
+                  <a asp-area="" asp-controller="Companies" asp-action="Index" class="nav-link px-sm-0 px-2">
+                    <i class="fs-5 bi-building"></i><span class="ms-1 d-none d-sm-inline">Company</span>
+                  </a>
+                </li>
+                <li class="dropdown">
+                  <a asp-area="" asp-controller="Projects" asp-action="Index" class="nav-link dropdown-toggle px-sm-0 px-2" id="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fs-5 bi-file-earmark-ppt"></i><span class="ms-1 d-none d-sm-inline">Projects</span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdown">
+
+                    @if (User.IsInRole(nameof(Roles.Admin)) || User.IsInRole(nameof(Roles.ProjectManager)))
+                    {
+                      <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="Create">New project...</a></li>
+
+                      <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="ActiveProjects">Active Projects</a></li>
+
+                    }
+
+                    @if (!User.IsInRole(nameof(Roles.Admin)))
+                    {
+                      <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="MyProjects">My Projects</a></li>
+                    }
+                    <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="AllProjects">All Projects</a></li>
+                    <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="ArchivedProjects">Archived Projects</a></li>
+                    @if (User.IsInRole(nameof(Roles.Admin)))
+                    {
+                      <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="UnassignedProjects">Unassigned Projects</a></li>
+
+                    }
+                  </ul>
+                </li>
+                <li class="dropdown">
+                  <a asp-area="" asp-controller="Tickets" asp-action="Index" class="nav-link dropdown-toggle px-sm-0 px-2" id="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fs-5 bi-file-earmark-font"></i><span class="ms-1 d-none d-sm-inline">Tickets</span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdown">
+                    <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="Create">New ticket...</a></li>
+                    @if (!User.IsInRole(nameof(Roles.Admin)))
+                    {
+                      <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="MyTickets">My Tickets</a></li>
+
+                    }
+
+                    <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="AllTickets">All Tickets</a></li>
+                    <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="ArchivedTickets">Archived Tickets</a></li>
+                    @if (User.IsInRole(nameof(Roles.Admin)) || User.IsInRole(nameof(Roles.ProjectManager)))
+                    {
+                      <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="UnassignedTickets">Unassigned Tickets</a></li>
+
+                    }
+                  </ul>
+                </li>
+                <li>
+                  <a asp-area="" asp-controller="Notifications" asp-action="Index" class="nav-link px-sm-0 px-2">
+                    <i class="fs-5 bi-mailbox2"></i><span class="ms-1 d-none d-sm-inline">Notifications</span>
+                  </a>
+                </li>
+
+
+                @if (User.IsInRole(nameof(Roles.Admin)))
+                {
+                  <li>
+                    <a asp-area="" asp-controller="UserRoles" asp-action="ManageUserRoles" class="nav-link px-sm-0 px-2">
+                      <i class="fs-5 bi-mailbox2"></i><span class="ms-1 d-none d-sm-inline">Manage User Roles</span>
+                    </a>
+                  </li>
+                }
+
+
+
+
+
+              </ul>
+            }
+          </div>
+        </div>
+        <div class="col d-flex flex-column h-100">
+          <main class="row">
+            @RenderBody()
+          </main>
+          <footer class="row bg-light py-4 mt-auto">
+            <div class="container">
+              &copy; 2021 - TheBugTracker - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </div>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+  </body>*@
 </html>
