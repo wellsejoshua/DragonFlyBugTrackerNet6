@@ -27,35 +27,44 @@ namespace DragonFlyBugTrackerNet6.Services
         #endregion
 
         #region Send Email
-        public async Task SendEmailAsync(string emailTo, string subject, string htmlMessage)
+        public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            MimeMessage email = new();
+            //null coalescing opperator. if the .Email is there it will get that but if it is null it will get what is on the opposite side of the ??
+            var emailSender = _mailSettings.Email ?? Environment.GetEnvironmentVariable("Email");
 
+            MimeMessage newEmail = new();
 
-            email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
-            email.To.Add(MailboxAddress.Parse(emailTo));
-            email.Subject = subject;
+            newEmail.Sender = MailboxAddress.Parse(emailSender);
 
-            var builder = new BodyBuilder
+            foreach (var emailAddress in email.Split(';'))
             {
-                HtmlBody = htmlMessage
-            };
+                newEmail.To.Add(MailboxAddress.Parse(emailAddress));
+            }
+            newEmail.Subject = subject;
 
-            email.Body = builder.ToMessageBody();
+            BodyBuilder emailBody = new();
+            emailBody.HtmlBody = htmlMessage;
+
+            newEmail.Body = emailBody.ToMessageBody();
+
+            //At this point lets login
+            using SmtpClient smtpClient = new();
 
             try
             {
-                using var smtp = new SmtpClient();
-                smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
-                smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
+                var host = _mailSettings.MailHost ?? Environment.GetEnvironmentVariable("MailHost");
+                var port = _mailSettings.MailPort != 0 ? _mailSettings.MailPort : int.Parse(Environment.GetEnvironmentVariable("MailPort")!);
+                var password = _mailSettings.MailPassword ?? Environment.GetEnvironmentVariable("MailPassword");
 
-                await smtp.SendAsync(email);
+                await smtpClient.ConnectAsync(host, port, SecureSocketOptions.StartTls);
+                await smtpClient.AuthenticateAsync(emailSender, password);
 
-                smtp.Disconnect(true);
+                await smtpClient.SendAsync(newEmail);
+                await smtpClient.DisconnectAsync(true);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                var error = ex.Message;
                 throw;
             }
 
