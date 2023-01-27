@@ -7,28 +7,69 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DragonFlyBugTrackerNet6.Data;
 using DragonFlyBugTrackerNet6.Models;
+using DragonFlyBugTrackerNet6.Models.ViewModels;
+using DragonFlyBugTrackerNet6.Services.Interfaces;
+using TheBugTracker.Extensions;
 
 namespace DragonFlyBugTrackerNet6.Controllers
 {
     public class CompaniesController : Controller
     {
+        #region Properties
         private readonly ApplicationDbContext _context;
+        private readonly IBTCompanyInfoService _companyInfoService;
 
-        public CompaniesController(ApplicationDbContext context)
+        #endregion
+
+        #region Constructor
+        public CompaniesController(ApplicationDbContext context, IBTCompanyInfoService companyInfoService)
         {
             _context = context;
+            _companyInfoService = companyInfoService;
         }
 
+        #endregion
+
+        #region Index
         // GET: Companies
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Companies.ToListAsync());
-        }
 
+            // show number of members in company by status Dev/Admin/...
+            //show the total number of projects; show total number of completed Projects
+            //
+
+            try
+            {
+                //int companyId = User.Identity.GetCompanyId().Value;
+                ////var company = _companyInfoService.GetCompanyInfoByIdAsync(companyId);
+                //var company = await _context.Companies.FirstOrDefaultAsync(c => c.Id == companyId);
+                DashboardViewModel model = new();
+                int companyId = User.Identity.GetCompanyId().Value;
+
+                model.Company = await _companyInfoService.GetCompanyInfoByIdAsync(companyId);
+                model.Projects = (await _companyInfoService.GetAllProjectsAsync(companyId)).Where(p => p.Archived == false).ToList();
+                model.Tickets = model.Projects.SelectMany(p => p.Tickets).Where(t => t.Archived == false).ToList();
+                model.Members = model.Company.Members.ToList();
+
+                return View(model);
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            //return View(await _context.Companies.ToListAsync());
+        }
+        #endregion
+
+        #region Details
         // GET: Companies/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Companies == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -42,13 +83,17 @@ namespace DragonFlyBugTrackerNet6.Controllers
 
             return View(company);
         }
+        #endregion
 
+        #region Create Get
         // GET: Companies/Create
         public IActionResult Create()
         {
             return View();
         }
+        #endregion
 
+        #region Create Post
         // POST: Companies/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -64,23 +109,27 @@ namespace DragonFlyBugTrackerNet6.Controllers
             }
             return View(company);
         }
+        #endregion
 
+        #region Edit Get
         // GET: Companies/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Companies == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var company = await _context.Companies.FindAsync(id);
+            Company company = await _context.Companies.FindAsync(id);
             if (company == null)
             {
                 return NotFound();
             }
             return View(company);
         }
+        #endregion
 
+        #region Edit Post
         // POST: Companies/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -115,11 +164,13 @@ namespace DragonFlyBugTrackerNet6.Controllers
             }
             return View(company);
         }
+        #endregion
 
+        #region Delete Get
         // GET: Companies/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Companies == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -133,29 +184,27 @@ namespace DragonFlyBugTrackerNet6.Controllers
 
             return View(company);
         }
+        #endregion
 
+        #region Delete Post
         // POST: Companies/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Companies == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Companies'  is null.");
-            }
             var company = await _context.Companies.FindAsync(id);
-            if (company != null)
-            {
-                _context.Companies.Remove(company);
-            }
-            
+            _context.Companies.Remove(company);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        #endregion
+
+        #region Private Company Exists
 
         private bool CompanyExists(int id)
         {
-          return _context.Companies.Any(e => e.Id == id);
+            return _context.Companies.Any(e => e.Id == id);
         }
+        #endregion
     }
 }
