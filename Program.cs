@@ -23,7 +23,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 //gives you registration confirmed page
 builder.Services.AddIdentity<AppUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>()
-    //.AddClaimsPrincipalFactory<BTUserClaimsPrincipalFactory>()
+    .AddClaimsPrincipalFactory<AppUserClaimsPrincipalFactory>()
     .AddDefaultUI()
     .AddDefaultTokenProviders();
 builder.Services.AddControllersWithViews();

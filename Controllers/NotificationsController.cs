@@ -7,29 +7,61 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DragonFlyBugTrackerNet6.Data;
 using DragonFlyBugTrackerNet6.Models;
+using DragonFlyBugTrackerNet6.Models.Enums;
+using DragonFlyBugTrackerNet6.Services.Interfaces;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Identity;
+using TheBugTracker.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DragonFlyBugTrackerNet6.Controllers
 {
+    [Authorize]
     public class NotificationsController : Controller
     {
+        #region Properties
         private readonly ApplicationDbContext _context;
+        private readonly IBTCompanyInfoService _companyService;
+        private readonly IBTTicketService _ticketService;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly IEmailSender _emailSender;
+        private readonly IBTNotificationService _notificationService;
 
-        public NotificationsController(ApplicationDbContext context)
+        #endregion
+
+        #region Constructor
+        public NotificationsController(ApplicationDbContext context, IBTCompanyInfoService companyService, IBTTicketService ticketService, UserManager<AppUser> userManager, IEmailSender emailSender, IBTNotificationService notificationService)
         {
             _context = context;
+            _companyService = companyService;
+            _ticketService = ticketService;
+            _userManager = userManager;
+            _emailSender = emailSender;
+            _notificationService = notificationService;
         }
+        #endregion
 
+        #region Index
         // GET: Notifications
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Notifications.Include(n => n.Recipient).Include(n => n.Sender).Include(n => n.Ticket);
-            return View(await applicationDbContext.ToListAsync());
+            //keep lists seperate for different displays add a filter by company as well before filter by user id
+            AppUser user = await _userManager.GetUserAsync(User);
+            List<Notification> sentNotifications = await _notificationService.GetReceivedNotificationsAsync(user.Id);
+            List<Notification> recievedNotifications = await _notificationService.GetSentNotificationsAsync(user.Id);
+            //come back after adding has been viewed button functionality 
+            var notifications = sentNotifications.Union(recievedNotifications).OrderByDescending(n => n.Created);
+            //var applicationDbContext = _context.Notifications.Include(n => n.Recipient).Include(n => n.Sender).Include(n => n.Ticket);
+            //await applicationDbContext.ToListAsync()
+            return View(notifications);
         }
+        #endregion
 
+        #region Details
         // GET: Notifications/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Notifications == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -46,39 +78,83 @@ namespace DragonFlyBugTrackerNet6.Controllers
 
             return View(notification);
         }
+        #endregion
 
+        #region Create Get
         // GET: Notifications/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["RecipientId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["SenderId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Description");
-            return View();
-        }
+            //Gave Admins and Project Managers the ability to send Notifications about any tickets in case one project manager is covering for another
+            int companyId = User.Identity.GetCompanyId().Value;
+            AppUser currentUser = await _userManager.GetUserAsync(User);
+            List<AppUser> users = await _companyService.GetAllMembersAsync(companyId);
+            List<AppUser> userNow = new();
+            userNow.Add(currentUser);
+            if (User.IsInRole(nameof(Roles.Admin)) || User.IsInRole(nameof(Roles.ProjectManager)))
+            {
+                List<Ticket> ticketNotification = await _ticketService.GetAllTicketsByCompanyAsync(companyId);
+                ViewData["RecipientId"] = new SelectList(users, "Id", "FullName");
+                ViewData["SenderId"] = new SelectList(userNow, "Id", "FullName");
+                ViewData["TicketId"] = new SelectList(ticketNotification, "Id", "Description");
+                return View();
 
+            }
+            else
+            {
+                List<Ticket> ticketNotification = await _ticketService.GetTicketsByUserIdAsync(currentUser.Id, companyId);
+                ViewData["RecipientId"] = new SelectList(users, "Id", "FullName");
+                ViewData["SenderId"] = new SelectList(userNow, "Id", "FullName");
+                ViewData["TicketId"] = new SelectList(ticketNotification, "Id", "Description");
+                return View();
+            }
+
+
+
+        }
+        #endregion
+
+        #region Create Post
         // POST: Notifications/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,TicketId,Title,Message,Created,RecipientId,SenderId,Viewed")] Notification notification)
+        public async Task<IActionResult> Create([Bind("Id,TicketId,RecipientId,SenderId,Title,Message")] Notification notification)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(notification);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    notification.Created = DateTimeOffset.Now;
+                    notification.Viewed = false;
+                    _context.Add(notification);
+                    await _context.SaveChangesAsync();
+                    //Get email of recipient from their Id
+                    AppUser recipient = await _context.Users.FirstOrDefaultAsync(u => u.Id == notification.RecipientId);
+                    await _emailSender.SendEmailAsync(recipient.Email, notification.Title, notification.Message);
+                    return RedirectToAction(nameof(Index));
+
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
             }
-            ViewData["RecipientId"] = new SelectList(_context.Users, "Id", "Id", notification.RecipientId);
-            ViewData["SenderId"] = new SelectList(_context.Users, "Id", "Id", notification.SenderId);
+            ViewData["RecipientId"] = new SelectList(_context.Users, "Id", "Name", notification.RecipientId);
+            ViewData["SenderId"] = new SelectList(_context.Users, "Id", "Name", notification.SenderId);
             ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Description", notification.TicketId);
+
             return View(notification);
         }
 
+        #endregion
+
+        #region Edit Get
         // GET: Notifications/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Notifications == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -93,13 +169,15 @@ namespace DragonFlyBugTrackerNet6.Controllers
             ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Description", notification.TicketId);
             return View(notification);
         }
+        #endregion
 
+        #region Edit Post
         // POST: Notifications/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,TicketId,Title,Message,Created,RecipientId,SenderId,Viewed")] Notification notification)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TicketId,RecipientId,SenderId,Title,Message,Created,Viewed")] Notification notification)
         {
             if (id != notification.Id)
             {
@@ -132,10 +210,13 @@ namespace DragonFlyBugTrackerNet6.Controllers
             return View(notification);
         }
 
+        #endregion
+
+        #region Delete Get
         // GET: Notifications/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Notifications == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -152,29 +233,27 @@ namespace DragonFlyBugTrackerNet6.Controllers
 
             return View(notification);
         }
+        #endregion
 
+        #region Delete Post
         // POST: Notifications/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Notifications == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Notifications'  is null.");
-            }
             var notification = await _context.Notifications.FindAsync(id);
-            if (notification != null)
-            {
-                _context.Notifications.Remove(notification);
-            }
-            
+            _context.Notifications.Remove(notification);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        #endregion
 
+        #region Private Notification Exists
         private bool NotificationExists(int id)
         {
-          return _context.Notifications.Any(e => e.Id == id);
+            return _context.Notifications.Any(e => e.Id == id);
         }
+        #endregion
+
     }
 }
