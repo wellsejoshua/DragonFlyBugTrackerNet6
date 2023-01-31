@@ -12,7 +12,7 @@ using DragonFlyBugTrackerNet6.Models.ViewModels;
 using DragonFlyBugTrackerNet6.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using TheBugTracker.Extensions;
+using DragonFlyBugTrackerNet6.Extensions;
 
 namespace DragonFlyBugTrackerNet6.Controllers
 {

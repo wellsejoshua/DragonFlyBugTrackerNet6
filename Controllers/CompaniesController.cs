@@ -9,7 +9,7 @@ using DragonFlyBugTrackerNet6.Data;
 using DragonFlyBugTrackerNet6.Models;
 using DragonFlyBugTrackerNet6.Models.ViewModels;
 using DragonFlyBugTrackerNet6.Services.Interfaces;
-using TheBugTracker.Extensions;
+using DragonFlyBugTrackerNet6.Extensions;
 
 namespace DragonFlyBugTrackerNet6.Controllers
 {

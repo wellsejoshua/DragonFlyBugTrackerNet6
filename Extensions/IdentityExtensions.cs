@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 
-namespace TheBugTracker.Extensions
+namespace DragonFlyBugTrackerNet6.Extensions
 {
     public static class IdentityExtensions
     {

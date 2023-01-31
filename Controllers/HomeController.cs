@@ -5,7 +5,7 @@ using DragonFlyBugTrackerNet6.Models.ViewModels;
 using DragonFlyBugTrackerNet6.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using TheBugTracker.Extensions;
+using DragonFlyBugTrackerNet6.Extensions;
 
 namespace DragonFlyBugTrackerNet6.Controllers
 {

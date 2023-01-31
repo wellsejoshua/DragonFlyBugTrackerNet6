@@ -13,7 +13,7 @@ using DragonFlyBugTrackerNet6.Models.ViewModels;
 using DragonFlyBugTrackerNet6.Services.Interfaces;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Identity;
-using TheBugTracker.Extensions;
+using DragonFlyBugTrackerNet6.Extensions;
 
 namespace DragonFlyBugTrackerNet6.Controllers
 {
@@ -248,7 +248,7 @@ namespace DragonFlyBugTrackerNet6.Controllers
         #region Private Create Url 
         private static string CreateUrl(Guid inviteId, int companyId, string email)
         {
-            string url = string.Format("https://localhost:44371/Invites/ProcessInvite?inviteId={0}&companyId={1}&email={2}", inviteId.ToString(), "1", email);
+            string url = string.Format("https://localhost:7093/Invites/ProcessInvite?inviteId={0}&companyId={1}&email={2}", inviteId.ToString(), "1", email);
             return url;
         }
         #endregion

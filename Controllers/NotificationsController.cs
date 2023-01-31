@@ -11,7 +11,7 @@ using DragonFlyBugTrackerNet6.Models.Enums;
 using DragonFlyBugTrackerNet6.Services.Interfaces;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Identity;
-using TheBugTracker.Extensions;
+using DragonFlyBugTrackerNet6.Extensions;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DragonFlyBugTrackerNet6.Controllers
