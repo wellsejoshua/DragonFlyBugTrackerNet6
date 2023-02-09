@@ -6,9 +6,11 @@ using DragonFlyBugTrackerNet6.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using DragonFlyBugTrackerNet6.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DragonFlyBugTrackerNet6.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -21,7 +23,7 @@ namespace DragonFlyBugTrackerNet6.Controllers
             _projectService = projectService;
             _companyInfoService = companyInfoService;
         }
-
+        [AllowAnonymous]
         public IActionResult Index()
         {
             return View();

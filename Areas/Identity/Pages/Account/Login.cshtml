@@ -5,7 +5,71 @@
     ViewData["Title"] = "Log in";
 }
 
+<div class="row d-flex justify-content-center">
+  <div class="col-md-12">
 
+
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title text-center">Login</h5>
+
+        <form id="account" method="post">
+          <div asp-validation-summary="All" class="text-danger"></div>
+          <div class="form-group">
+            <label asp-for="Input.Email"></label>
+            <input asp-for="Input.Email" class="form-control" />
+            <span asp-validation-for="Input.Email" class="text-danger"></span>
+          </div>
+          <div class="form-group">
+            <label asp-for="Input.Password"></label>
+            <input asp-for="Input.Password" class="form-control" />
+            <span asp-validation-for="Input.Password" class="text-danger"></span>
+          </div>
+          <div class="form-group">
+            <div class="checkbox">
+              <label asp-for="Input.RememberMe">
+                <input asp-for="Input.RememberMe" />
+                                @Html.DisplayNameFor(m => m.Input.RememberMe)
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">Log in</button>
+          </div>
+          <div class="form-group">
+            <p>
+              <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+            </p>
+            <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+            </p>
+                        @*            <p>
+            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+            </p>
+            <p>
+            <a asp-area="Identity" asp-page="/Account/RegisterNewCompany">Register A Company</a>
+            </p>
+            <p>*@
+          </div>
+        </form>
+
+
+      </div>
+    </div>
+
+
+
+  </div>
+</div>
+
+
+<div class="row text-center">
+  <div class="col-3"><a href="#" class="card-link btn btn-warning">Demo Admin  </a> </div>
+  <div class="col-3"><a href="#" class="card-link btn btn-warning">Demo Manager</a></div>
+  <div class="col-3"><a href="#" class="card-link btn btn-warning">Demo Developer</a></div>
+  <div class="col-3"><a href="#" class="card-link btn btn-warning">Demo Submitter</a></div>
+</div>
+
+@*
 <div class="row d-flex justify-content-center">
   <div class="col-md-6">
 
@@ -51,8 +115,19 @@
         </div>
       </form>
     </section>
+    <div class="row">
+      <div class="col-5 btn btn-warning btn-rounded m-1">Demo Admin</div>
+      <div class="col-5 btn btn-warning btn-rounded m-1">Demo Pm   </div>
+    </div>
+    <div class="row">
+      <div class="col-4 btn btn-warning btn-rounded">Demo Dev</div>
+      <div class="col-4 btn btn-warning btn-rounded">Demo New User   </div>
+      <div class="col-4 btn btn-warning btn-rounded">Demo Submitter   </div>
+    </div>
+
+
   </div>
-</div>
+</div>*@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
