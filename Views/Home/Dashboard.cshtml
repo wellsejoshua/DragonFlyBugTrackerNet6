@@ -25,12 +25,24 @@
     int priorityProjectHigh = Model.Projects.Where(p => p.ProjectPriority.Name == "High").Count();
     int priorityProjectUrgent = Model.Projects.Where(p => p.ProjectPriority.Name == "Urgent").Count();
 
+    int priorityTicketLow = Model.Tickets.Where(t => t.TicketPriority.Name == "Low").Count();
+    int priorityTicketMedium = Model.Tickets.Where(t => t.TicketPriority.Name == "Medium").Count();
+    int priorityTicketHigh = Model.Tickets.Where(t => t.TicketPriority.Name == "High").Count();
+    int priorityTicketUrgent = Model.Tickets.Where(t => t.TicketPriority.Name == "Urgent").Count();
+
+
+
+    List<Project> projectList = Model.Projects;
+    int projectListCount = Model.Projects.Count;
+
+
+
 
 }
 
 
 
-<h1>Dashboard</h1>
+<h1 class="text-center">Dashboard</h1>
 <a href="javascript:void(0);">
     @if (btUser?.AvatarFileData != null)
     {
@@ -113,81 +125,80 @@
 
       <!--Misc Details-->
       <div class="col-12 col-md-3 border rounded">
-        <a asp-action="AllProjects" asp-controller="Projects" style="text-decoration:none">
-          <div class="card text-center bg-light">
-            <div class="body">
-              <div class="p-15 text-dark font-weight-bold">
-                <i class="fa fa-user pull-left"></i>
-                <span class="text-center">
-                  Project Managers
-                  <br>
-                  <p class="font-weight-bolder">@projectManagers.Count</p>
-                </span>
-                <hr class="bg-black">
-                <i class="fa fa-users pull-left"></i>
-                <span class="text-center">
-                  Total Users
-                  <br>
-                  <p class="font-weight-bolder">@Model.Members.Count</p>
-                </span>
-                <hr class="bg-black">
-                <i class="fa fa-ticket pull-left"></i>
-                <span class="text-center">
-                  Tickets in Dev
-                  <br>
-                  <p class="font-weight-bolder">@Model.Tickets.Where(t => t.TicketStatus.Name == "Development").Count()</p>
-                </span>
-                <hr class="bg-black">
-                <i class="fa fa-sitemap pull-left"></i>
-                <span class="text-center">
-                  Total Developers
-                  <br>
-                  <p class="font-weight-bolder"> @usersDev.Count</p>
-                </span>
-                <hr class="bg-black">
-              </div>
+
+        <div class="card text-center bg-light">
+          <div class="body">
+            <div class="p-15 text-dark font-weight-bold">
+              <i class="fa fa-user pull-left"></i>
+              <span class="text-center">
+                Project Managers
+                <br>
+                <p class="font-weight-bolder">@projectManagers.Count</p>
+              </span>
+              <hr class="bg-black">
+              <i class="fa fa-users pull-left"></i>
+              <span class="text-center">
+                Total Users
+                <br>
+                <p class="font-weight-bolder">@Model.Members.Count</p>
+              </span>
+              <hr class="bg-black">
+              <i class="fa fa-ticket pull-left"></i>
+              <span class="text-center">
+                Tickets in Dev
+                <br>
+                <p class="font-weight-bolder">@Model.Tickets.Where(t => t.TicketStatus.Name == "Development").Count()</p>
+              </span>
+              <hr class="bg-black">
+              <i class="fa fa-sitemap pull-left"></i>
+              <span class="text-center">
+                Total Developers
+                <br>
+                <p class="font-weight-bolder"> @usersDev.Count</p>
+              </span>
+              <hr class="bg-black">
             </div>
           </div>
-        </a>
+        </div>
+
       </div>
 
       <div class="col-12 col-md-3 border rounded">
-        <a asp-action="AllProjects" asp-controller="Projects" style="text-decoration:none">
-          <div class="card text-center bg-light">
-            <div class="body">
-              <div class="p-15 text-dark font-weight-bold">
-                <i class="fa fa-vcard pull-left"></i>
-                <span class="text-center">
-                  Admins
-                  <br>
-                  <p class="font-weight-bolder">@admins.Count</p>
-                </span>
-                <hr class="bg-black">
-                <i class="fa fa-book pull-left"></i>
-                <span class="text-center">
-                  Projects
-                  <br>
-                  <p class="font-weight-bolder">@Model.Projects.Count</p>
-                </span>
-                <hr class="bg-black">
-                <i class="fa fa-tags pull-left"></i>
-                <span class="text-center">
-                  Tickets
-                  <br>
-                  <p class="font-weight-bolder">@Model.Tickets.Count</p>
-                </span>
-                <hr class="bg-black">
-                <i class="fa fa-bell-o pull-left"></i>
-                <span class="text-center">
-                  Notifications
-                  <br>
-                  <p class="font-weight-bolder">@notifications.Count</p>
-                </span>
-                <hr class="bg-black">
-              </div>
+        <div class="card text-center bg-light">
+          <div class="body">
+            <div class="p-15 text-dark font-weight-bold">
+              <i class="fa fa-vcard pull-left"></i>
+              <span class="text-center">
+                Admins
+                <br>
+                <p class="font-weight-bolder">@admins.Count</p>
+              </span>
+              <hr class="bg-black">
+              <i class="fa fa-book pull-left"></i>
+              <span class="text-center">
+                Projects
+                <br>
+                <p class="font-weight-bolder">@Model.Projects.Count</p>
+              </span>
+              <hr class="bg-black">
+              <i class="fa fa-tags pull-left"></i>
+              <span class="text-center">
+                Tickets
+                <br>
+                <p class="font-weight-bolder">@Model.Tickets.Count</p>
+              </span>
+              <hr class="bg-black">
+              <i class="fa fa-bell-o pull-left"></i>
+              <span class="text-center">
+                Notifications
+                <br>
+                <p class="font-weight-bolder">@notifications.Count</p>
+              </span>
+              <hr class="bg-black">
             </div>
           </div>
-        </a>
+        </div>
+
       </div>
       <!--Misc Details End-->
       <!--Ticket Priority Info -->
@@ -202,8 +213,8 @@
                   <i class="ion-android-more-vertical rotate-90"></i>
                 </span>
                 <div class="dropdown-menu dropdown-menu-right">
-                  <a class="dropdown-item" href="#"><i class="ion-android-list"></i> Details</a>
-                  <a class="dropdown-item" href="#"><i class="ion-android-add"></i> Add new</a>
+                  <a class="dropdown-item" asp-action="AllTickets" asp-controller="Tickets"><i class="ion-android-list"></i> Details</a>
+                  <a class="dropdown-item" asp-action="Create" asp-controller="Tickets"><i class="ion-android-add"></i> Add new</a>
                   <a class="dropdown-item" asp-action="Dashboard" asp-controller="Home"><i class="ion-android-refresh"></i> Refresh</a>
                 </div>
               </div>
@@ -215,14 +226,15 @@
             </div>
           </div>
 
-@*          <div class="box-body bg-gray-light py-12">
-            <span class="text-muted mr-1">Yesterday's overdue:</span>
-            <span class="text-dark">9</span>
+                    @*          <div class="box-body bg-gray-light py-12">
+          <span class="text-muted mr-1">Yesterday's overdue:</span>
+          <span class="text-dark">9</span>
           </div>*@
 
           <div class="progress progress-xxs mt-0 mb-0">
             <div class="progress-bar bg-danger" role="progressbar" style="width: 52%; height: 3px;"
-                 aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
+                 aria-valuenow="45" aria-valuemin="0" aria-valuemax="100">
+            </div>
           </div>
         </div>
         <!--Medium Priority Box-->
@@ -235,8 +247,8 @@
                   <i class="ion-android-more-vertical rotate-90"></i>
                 </span>
                 <div class="dropdown-menu dropdown-menu-right">
-                  <a class="dropdown-item" href="#"><i class="ion-android-list"></i> Details</a>
-                  <a class="dropdown-item" href="#"><i class="ion-android-add"></i> Add new</a>
+                  <a class="dropdown-item" asp-action="AllTickets" asp-controller="Tickets"><i class="ion-android-list"></i> Details</a>
+                  <a class="dropdown-item" asp-action="Create" asp-controller="Tickets"><i class="ion-android-add"></i> Add new</a>
                   <a class="dropdown-item" asp-action="Dashboard" asp-controller="Home"><i class="ion-android-refresh"></i> Refresh</a>
                 </div>
               </div>
@@ -263,8 +275,8 @@
                   <i class="ion-android-more-vertical rotate-90"></i>
                 </span>
                 <div class="dropdown-menu dropdown-menu-right">
-                  <a class="dropdown-item" href="#"><i class="ion-android-list"></i> Details</a>
-                  <a class="dropdown-item" href="#"><i class="ion-android-add"></i> Add new</a>
+                  <a class="dropdown-item" asp-action="AllTickets" asp-controller="Tickets"><i class="ion-android-list"></i> Details</a>
+                  <a class="dropdown-item" asp-action="Create" asp-controller="Tickets"><i class="ion-android-add"></i> Add new</a>
                   <a class="dropdown-item" asp-action="Dashboard" asp-controller="Home"><i class="ion-android-refresh"></i> Refresh</a>
                 </div>
               </div>
@@ -276,9 +288,9 @@
             </div>
           </div>
 
-@*          <div class="box-body bg-gray-light py-12">
-            <span class="text-muted mr-1">Closed this week:</span>
-            <span class="text-dark">0</span>
+                    @*          <div class="box-body bg-gray-light py-12">
+          <span class="text-muted mr-1">Closed this week:</span>
+          <span class="text-dark">0</span>
           </div>*@
 
           <div class="progress progress-xxs mt-0 mb-0">
@@ -296,8 +308,8 @@
                   <i class="ion-android-more-vertical rotate-90"></i>
                 </span>
                 <div class="dropdown-menu dropdown-menu-right">
-                  <a class="dropdown-item" href="#"><i class="ion-android-list"></i> Details</a>
-                  <a class="dropdown-item" href="#"><i class="ion-android-add"></i> Add new</a>
+                  <a class="dropdown-item" asp-action="AllTickets" asp-controller="Tickets"><i class="ion-android-list"></i> Details</a>
+                  <a class="dropdown-item" asp-action="Create" asp-controller="Tickets"><i class="ion-android-add"></i> Add new</a>
                   <a class="dropdown-item" asp-action="Dashboard" asp-controller="Home"><i class="ion-android-refresh"></i> Refresh</a>
                 </div>
               </div>
@@ -361,7 +373,7 @@
       <div class="col-12 col-md-4 rounded mt-2 mb-2">
         <div class="box">
           <div class="box-header with-border">
-            <h3 class="box-title">Play Chart</h3>
+            <h3 class="box-title">Tickets By Priority</h3>
 
             <div class="box-tools pull-right">
               <button type="button" class="btn btn-box-tool" data-widget="collapse">
@@ -722,7 +734,7 @@
       });
     };
     </script>-->
-      -->
+                      -->
 
 
     <!-- *** Begin Chart JS Pie/Donut *** -->
@@ -779,24 +791,24 @@
     <script src='https://cdn.plot.ly/plotly-2.4.2.min.js'></script>
     <script>
       $.ajax({
-        type: "POST",
-        url: "/Home/PlotlyBarChart",
-        data: '{}',
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (result) {
-          var data = result;
+          type: "POST",
+          url: "/Home/PlotlyBarChart",
+          data: '{}',
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function (result) {
+              var data = result;
 
-          var layout = { barmode: 'group' };
+              var layout = { barmode: 'group' };
 
-          Plotly.newPlot('plotlyChart', data, layout);
-        },
-        failure: function (result) {
-          alert(result.d);
-        },
-        error: function (result) {
-          alert(result.d);
-        }
+              Plotly.newPlot('plotlyChart', data, layout);
+          },
+          failure: function (result) {
+              alert(result.d);
+          },
+          error: function (result) {
+              alert(result.d);
+          }
       });
     </script>
     @*<script src="~/js/dashboard.js"></script>*@
@@ -806,238 +818,240 @@
 
       $(function () {
 
-        'use strict';
+          'use strict';
 
-        // Make the dashboard widgets sortable Using jquery UI
-        $('.connectedSortable').sortable({
-          placeholder: 'sort-highlight',
-          connectWith: '.connectedSortable',
-          handle: '.box-header, .nav-tabs',
-          forcePlaceholderSize: true,
-          zIndex: 999999
-        });
-        $('.connectedSortable .box-header, .connectedSortable .nav-tabs-custom').css('cursor', 'move');
-
-
-        // Morris-chart
-
-        if ($('#morris_bar_chart').length > 0)
-          // Morris bar chart
-          Morris.Bar({
-            element: 'morris_bar_chart',
-            data: [{
-              y: '2018',
-              a: 100,
-              b: 90,
-              c: 60,
-              f: 40
-            }],
-            xkey: 'y',
-            ykeys: ['a', 'b', 'c', 'f'],
-            labels: ['A', 'B', 'C', 'F'],
-            barColors: ['#ef5350', '#e9ab2e', '#398bf7', '#00c292'],
-            barOpacity: 0.6,
-            hideHover: 'auto',
-            grid: false,
-            resize: true,
-            barGap: 7,
-            gridTextColor: '#878787',
-            gridTextFamily: "Poppins"
+          // Make the dashboard widgets sortable Using jquery UI
+          $('.connectedSortable').sortable({
+              placeholder: 'sort-highlight',
+              connectWith: '.connectedSortable',
+              handle: '.box-header, .nav-tabs',
+              forcePlaceholderSize: true,
+              zIndex: 999999
           });
-
-        //// chartjs
-        //if ($('#chart_task').length > 0) {
-        //  var ctx6 = document.getElementById("chart_task").getContext("2d");
-        //  var data6 = {
-        //    labels: [
-        //      "Completed",
-        //      "Delayed",
-        //      "Overdue"
-        //    ],
-        //    datasets: [
-        //      {
-        //        data: [200, 90, 150, 90],
-        //        backgroundColor: [
-        //          "#fec107",
-        //          "#00c292",
-        //          "#03a9f3",
-        //        ],
-        //        hoverBackgroundColor: [
-        //          "rgba(254, 193, 7, 0.6)",
-        //          "rgba(0, 194, 146, 0.6)",
-        //          "rgba(3, 169, 243, 0.6)",
-        //        ]
-        //      }]
-        //  };
-
-        //  var pieChart = new Chart(ctx6, {
-        //    type: 'pie',
-        //    data: data6,
-        //    options: {
-        //      animation: {
-        //        duration: 3000
-        //      },
-        //      responsive: true,
-        //      maintainAspectRatio: false,
-        //      legend: {
-        //        labels: {
-        //          fontFamily: "Poppins",
-        //          fontColor: "#878787"
-        //        }
-        //      },
-        //      tooltip: {
-        //        backgroundColor: 'rgba(33,33,33,1)',
-        //        cornerRadius: 0,
-        //        footerFontFamily: "'Poppins'"
-        //      },
-        //      elements: {
-        //        arc: {
-        //          borderWidth: 0
-        //        }
-        //      }
-        //    }
-        //  });
-        //}
+          $('.connectedSortable .box-header, .connectedSortable .nav-tabs-custom').css('cursor', 'move');
 
 
-        // chartjs
-        if ($('#chart_task').length > 0) {
-          var ctx6 = document.getElementById("chart_task").getContext("2d");
-          var data6 = {
-            labels: [
+          // Morris-chart
 
-              "Completed",
-              "Delayed",
-              "Overdue"
-            ],
-            datasets: [
-              {
-                data: [200, 90, 150, 90],
-                backgroundColor: [
-                  "#fec107",
-                  "#00c292",
-                  "#03a9f3",
-                ],
-                hoverBackgroundColor: [
-                  "rgba(254, 193, 7, 0.6)",
-                  "rgba(0, 194, 146, 0.6)",
-                  "rgba(3, 169, 243, 0.6)",
-                ]
-              }]
-          };
+          if ($('#morris_bar_chart').length > 0)
+              // Morris bar chart
+              Morris.Bar({
+                  element: 'morris_bar_chart',
+                  data: [{
+                      y: '2018',
+                      a: 100,
+                      b: 90,
+                      c: 60,
+                      f: 40
+                  }],
+                  xkey: 'y',
+                  ykeys: ['a', 'b', 'c', 'f'],
+                  labels: ['A', 'B', 'C', 'F'],
+                  barColors: ['#ef5350', '#e9ab2e', '#398bf7', '#00c292'],
+                  barOpacity: 0.6,
+                  hideHover: 'auto',
+                  grid: false,
+                  resize: true,
+                  barGap: 7,
+                  gridTextColor: '#878787',
+                  gridTextFamily: "Poppins"
+              });
 
-          var pieChart = new Chart(ctx6, {
-            type: 'pie',
-            data: data6,
-            options: {
-              animation: {
-                duration: 3000
-              },
-              responsive: true,
-              maintainAspectRatio: false,
-              legend: {
-                labels: {
-                  fontFamily: "Poppins",
-                  fontColor: "#878787"
-                }
-              },
-              tooltip: {
-                backgroundColor: 'rgba(33,33,33,1)',
-                cornerRadius: 0,
-                footerFontFamily: "'Poppins'"
-              },
-              elements: {
-                arc: {
-                  borderWidth: 0
-                }
-              }
-            }
-          });
-        }
+          //// chartjs
+          //if ($('#chart_task').length > 0) {
+          //  var ctx6 = document.getElementById("chart_task").getContext("2d");
+          //  var data6 = {
+          //    labels: [
+          //      "Completed",
+          //      "Delayed",
+          //      "Overdue"
+          //    ],
+          //    datasets: [
+          //      {
+          //        data: [200, 90, 150, 90],
+          //        backgroundColor: [
+          //          "#fec107",
+          //          "#00c292",
+          //          "#03a9f3",
+          //        ],
+          //        hoverBackgroundColor: [
+          //          "rgba(254, 193, 7, 0.6)",
+          //          "rgba(0, 194, 146, 0.6)",
+          //          "rgba(3, 169, 243, 0.6)",
+          //        ]
+          //      }]
+          //  };
+
+          //  var pieChart = new Chart(ctx6, {
+          //    type: 'pie',
+          //    data: data6,
+          //    options: {
+          //      animation: {
+          //        duration: 3000
+          //      },
+          //      responsive: true,
+          //      maintainAspectRatio: false,
+          //      legend: {
+          //        labels: {
+          //          fontFamily: "Poppins",
+          //          fontColor: "#878787"
+          //        }
+          //      },
+          //      tooltip: {
+          //        backgroundColor: 'rgba(33,33,33,1)',
+          //        cornerRadius: 0,
+          //        footerFontFamily: "'Poppins'"
+          //      },
+          //      elements: {
+          //        arc: {
+          //          borderWidth: 0
+          //        }
+          //      }
+          //    }
+          //  });
+          //}
 
 
+          // chartjs
+          if ($('#chart_task').length > 0) {
+              var ctx6 = document.getElementById("chart_task").getContext("2d");
+              var data6 = {
+                  labels: [
 
+                      "@projectList[0].Name",
+                      "@projectList[1].Name",
+                      "@projectList[2].Name",
+                      "@projectList[3].Name"
+                  ],
+                  datasets: [
+                      {
+                          data: [@projectList[0].Tickets.Count(), @projectList[1].Tickets.Count(), @projectList[2].Tickets.Count(), @projectList[3].Tickets.Count()],
+                          backgroundColor: [
+                              "#fec107",
+                              "#00c292",
+                              "#03a9f3",
+                              "#ffffff",
+                          ],
+                          hoverBackgroundColor: [
+                              "rgba(254, 193, 7, 0.6)",
+                              "rgba(0, 194, 146, 0.6)",
+                              "rgba(3, 169, 243, 0.6)",
+                          ]
+                      }]
+              };
 
-
-
-        if ($('#chart_risk').length > 0) {
-          var ctx7 = document.getElementById("chart_risk").getContext("2d");
-          var data7 = {
-            labels: [
-              "Low",
-              "Medium",
-              "High",
-              "Urgent"
-            ],
-            datasets: [
-              {
-                data: [@priorityProjectLow, @priorityProjectMedium, @priorityProjectHigh, @priorityProjectUrgent],
-                backgroundColor: [
-                  "#00c292",
-                  "#03a9f3",
-                  "#ab8ce4",
-                  "#fb9678"
-                ],
-                hoverBackgroundColor: [
-                  "rgb(0, 194, 146, 0.6)",
-                  "rgba(3, 169, 243, 0.6)",
-                  "rgba(171, 140, 228, 0.6)",
-                  "rgba(251, 150, 120, 0.6)"
-                ]
-              }]
-          };
-
-          var doughnutChart = new Chart(ctx7, {
-            type: 'doughnut',
-            data: data7,
-            options: {
-              animation: {
-                duration: 2000
-              },
-              responsive: true,
-              maintainAspectRatio: false,
-              legend: {
-                labels: {
-                  fontFamily: "Poppins",
-                  fontColor: "#878787"
-                }
-              },
-              elements: {
-                arc: {
-                  borderWidth: 0
-                }
-              },
-              tooltip: {
-                backgroundColor: 'rgba(33,33,33,1)',
-                cornerRadius: 0,
-                footerFontFamily: "'Poppins'"
-              }
-            }
-          });
-        }
+              var pieChart = new Chart(ctx6, {
+                  type: 'pie',
+                  data: data6,
+                  options: {
+                      animation: {
+                          duration: 3000
+                      },
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      legend: {
+                          labels: {
+                              fontFamily: "Poppins",
+                              fontColor: "#878787"
+                          }
+                      },
+                      tooltip: {
+                          backgroundColor: 'rgba(33,33,33,1)',
+                          cornerRadius: 0,
+                          footerFontFamily: "'Poppins'"
+                      },
+                      elements: {
+                          arc: {
+                              borderWidth: 0
+                          }
+                      }
+                  }
+              });
+          }
 
 
 
-        if ($('#ct_chart_2').length > 0) {
-          new Chartist.Line('#ct_chart_2', {
-            labels: [1, 2, 3, 4, 5],
-            series: [
-              [1, 5, 10, 0, 1],
-              [10, 15, 0, 1, 2]
-            ]
-          }, {
-            // Remove this configuration to see that chart rendered with cardinal spline interpolation
-            // Sometimes, on large jumps in data values, it's better to use simple smoothing.
-            lineSmooth: Chartist.Interpolation.simple({
-              divisor: 2
-            }),
-            fullWidth: true,
-            chartPadding: {
-              right: 20
-            },
-            low: 0
-          });
-        }
+
+
+
+          if ($('#chart_risk').length > 0) {
+              var ctx7 = document.getElementById("chart_risk").getContext("2d");
+              var data7 = {
+                  labels: [
+                      "Low",
+                      "Medium",
+                      "High",
+                      "Urgent"
+                  ],
+                  datasets: [
+                      {
+                          data: [@priorityProjectLow, @priorityProjectMedium, @priorityProjectHigh, @priorityProjectUrgent],
+                          backgroundColor: [
+                              "#00c292",
+                              "#03a9f3",
+                              "#ab8ce4",
+                              "#fb9678"
+                          ],
+                          hoverBackgroundColor: [
+                              "rgb(0, 194, 146, 0.6)",
+                              "rgba(3, 169, 243, 0.6)",
+                              "rgba(171, 140, 228, 0.6)",
+                              "rgba(251, 150, 120, 0.6)"
+                          ]
+                      }]
+              };
+
+              var doughnutChart = new Chart(ctx7, {
+                  type: 'doughnut',
+                  data: data7,
+                  options: {
+                      animation: {
+                          duration: 2000
+                      },
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      legend: {
+                          labels: {
+                              fontFamily: "Poppins",
+                              fontColor: "#878787"
+                          }
+                      },
+                      elements: {
+                          arc: {
+                              borderWidth: 0
+                          }
+                      },
+                      tooltip: {
+                          backgroundColor: 'rgba(33,33,33,1)',
+                          cornerRadius: 0,
+                          footerFontFamily: "'Poppins'"
+                      }
+                  }
+              });
+          }
+
+
+
+          if ($('#ct_chart_2').length > 0) {
+              new Chartist.Line('#ct_chart_2', {
+                  labels: [1, 2, 3, 4, 5],
+                  series: [
+                      [1, 5, 10, 0, 1],
+                      [10, 15, 0, 1, 2]
+                  ]
+              }, {
+                  // Remove this configuration to see that chart rendered with cardinal spline interpolation
+                  // Sometimes, on large jumps in data values, it's better to use simple smoothing.
+                  lineSmooth: Chartist.Interpolation.simple({
+                      divisor: 2
+                  }),
+                  fullWidth: true,
+                  chartPadding: {
+                      right: 20
+                  },
+                  low: 0
+              });
+          }
 
 
 
@@ -1052,38 +1066,36 @@
     <script>
       const ctx = document.getElementById('myChart').getContext('2d');
       const myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-          datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-              'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-              'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true
-            }
+          type: 'bar',
+          data: {
+              labels: ['Urgent', 'Medium', 'Low', 'High'],
+              datasets: [{
+                  label: 'Ticket Priority Rankings',
+                  data: [@priorityTicketUrgent, @priorityTicketMedium, @priorityTicketLow, @priorityTicketHigh],
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(255, 159, 64, 0.2)'
+                  ],
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(255, 159, 64, 1)'
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+              }
           }
-        }
       });
     </script>
 

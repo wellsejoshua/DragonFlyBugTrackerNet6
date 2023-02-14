@@ -132,7 +132,7 @@
 
     <header class="main-header">
       <!-- Logo -->
-      <a href="test.html" class="logo">
+      <a asp-controller="Home" asp-action="Dashboard" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
         <b class="logo-mini">
           <span class="light-logo"><img src="/img/cbwellls/DragonflyLog50.png" alt="logo"></span>
@@ -442,7 +442,7 @@
             <div class="user-panel">
 
               <div class="ulogo">
-                <a href="index.html">
+                <a asp-controller="Home" asp-action="Dashboard">
                   <!-- logo for regular state and mobile devices -->
                   <span><b>DragonFly </b>Bug Tracker</span>
                 </a>
@@ -597,7 +597,7 @@
             <div class="user-panel">
 
               <div class="ulogo">
-                <a href="index.html">
+                <a asp-controller="Home" asp-action="Dashboard">
                   <!-- logo for regular state and mobile devices -->
                   <span><b>DragonFly </b>Bug Tracker</span>
                 </a>
@@ -611,10 +611,10 @@
                   <partial name="_LoginPartial" />
                 </div>
                 <a asp-area="Identity" asp-page="/Account/Login" class="col-12 mt-15 text-center text-warning">Demo!</a>
-                @*<div class="col-6 btn btn-warning btn-rounded mt-15">Try It Now!</div>*@
-@*                <a asp-area="Identity" asp-page="/Account/Login" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="true">
-                  <span class="d-none d-sm-inline mx-1">Log In</span>
-                </a>*@
+                            @*<div class="col-6 btn btn-warning btn-rounded mt-15">Try It Now!</div>*@
+                            @*                <a asp-area="Identity" asp-page="/Account/Login" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="true">
+            <span class="d-none d-sm-inline mx-1">Log In</span>
+            </a>*@
 
               </div>
 
@@ -635,38 +635,44 @@
 
                 @if (User.Identity.IsAuthenticated)
                 {
-                    try
-                    {
-                        if ((this.ViewContext.RouteData?.Values["controller"]) is not null && (this.ViewContext.RouteData?.Values["action"]) is not null)
-                        {
-                            string controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
-                            string actionName = this.ViewContext.RouteData.Values["action"].ToString();
-                    <h1>
-                                @controllerName
-                      <small>@actionName</small>
-                    </h1>
-                        }
-                        else
-                        {
-                            string actionName = "Random";
-                    <h1>
-                                @actionName
-                      <small>Control panel</small>
-                    </h1>
-                        }
-                    }
-                    catch (Exception)
-                    {
+                    @* try
+        {
+        if ((this.ViewContext.RouteData?.Values["controller"]) is not null && (this.ViewContext.RouteData?.Values["action"]) is not null)
+        {
+        string controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
+        string actionName = this.ViewContext.RouteData.Values["action"].ToString();
+        <h1>
+        @controllerName
+        <small>@actionName</small>
+        </h1>
+        }
+        else
+        {
+        string actionName = "Random";
+        <h1>
+        @actionName
+        <small>Control panel</small>
+        </h1>
+        }
+        }
+        catch (Exception)
+        {
 
-                        throw;
-                    }
+        throw;
+        }
+        *@
+            <div class="mt-10">
+              <partial name="_LoginPartial" />
+            </div>
 
-
-            <partial name="_LoginPartial" />
             <a asp-area="" asp-controller="Tickets" asp-action="Create" class="btn btn-block btn-warning btn-round btn-outline border text-center mt-5">New ticket</a>
                 }
                 else
                 {
+            <div class="row mt-5">
+              <a class="btn btn-warning" asp-area="Identity" asp-page="/Account/Login">Login or Demo</a>
+
+            </div>
                     @*<partial name="_LoginPartial" />*@
                 }
 

@@ -438,7 +438,7 @@ namespace DragonFlyBugTrackerNet6.Controllers
                     }
 
                     //Might not need to be added
-                    return RedirectToAction("Index");
+                    return RedirectToAction("AllProjects");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
