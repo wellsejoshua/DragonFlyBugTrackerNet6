@@ -119,7 +119,13 @@ namespace DragonFlyBugTrackerNet6.Services
         {
             bool result = (await _userManager.RemoveFromRolesAsync(user, roles)).Succeeded;
             return result;
-        } 
+        }
+
+        public async Task<bool> AddUserToRolesAsync(AppUser user, IEnumerable<string> roles)
+        {
+            bool result = (await _userManager.AddToRolesAsync(user, roles)).Succeeded;
+            return result;
+        }
         #endregion
     }
 }

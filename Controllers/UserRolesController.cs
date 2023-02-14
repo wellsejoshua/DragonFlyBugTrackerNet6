@@ -70,6 +70,9 @@ namespace TheBugTracker.Controllers
             //grab the selected Role
             string userRole = member.SelectedRoles.FirstOrDefault();
 
+            //Get Roles from the select list
+            IEnumerable<string> rolesSelectList = member.SelectedRoles;
+
 
             if (!string.IsNullOrEmpty(userRole))
             {
@@ -77,7 +80,8 @@ namespace TheBugTracker.Controllers
                 if (await _rolesService.RemoveUserFromRolesAsync(btUser, roles))
                 {
                     //Add User to the new role
-                    await _rolesService.AddUserToRoleAsync(btUser, userRole);
+                    //await _rolesService.AddUserToRoleAsync(btUser, userRole);
+                    await _rolesService.AddUserToRolesAsync(btUser, rolesSelectList);
                 }
             }
 

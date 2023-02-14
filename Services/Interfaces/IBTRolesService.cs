@@ -17,6 +17,8 @@ namespace DragonFlyBugTrackerNet6.Services.Interfaces
 
         public Task<bool> AddUserToRoleAsync(AppUser user, string roleName);
 
+        public Task<bool> AddUserToRolesAsync(AppUser user, IEnumerable<string> roles);
+
         public Task<bool> RemoveUserFromRoleAsync(AppUser user, string roleName);
 
         public Task<bool> RemoveUserFromRolesAsync(AppUser user, IEnumerable<string> roles);
