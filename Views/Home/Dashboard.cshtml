@@ -370,26 +370,26 @@
       </div>
       <!--Projects by Priority Chart END-->
       <!--Play Chart-->
-      @*<div class="col-12 col-md-6 rounded mt-2 mb-2">
-        <div class="box">
-          <div class="box-header with-border">
-            <h3 class="box-title">Tickets By Priority</h3>
+            @*<div class="col-12 col-md-6 rounded mt-2 mb-2">
+      <div class="box">
+      <div class="box-header with-border">
+      <h3 class="box-title">Tickets By Priority</h3>
 
-            <div class="box-tools pull-right">
-              <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                <i class="fa fa-minus"></i>
-              </button>
-              <button type="button" class="btn btn-box-tool" data-widget="remove">
-                <i class="fa fa-times"></i>
-              </button>
-            </div>
-          </div>
-          <div class="box-body">
-            <div class="chart">
-              <canvas id="myChart" height="300"></canvas>
-            </div>
-          </div>
-        </div>
+      <div class="box-tools pull-right">
+      <button type="button" class="btn btn-box-tool" data-widget="collapse">
+      <i class="fa fa-minus"></i>
+      </button>
+      <button type="button" class="btn btn-box-tool" data-widget="remove">
+      <i class="fa fa-times"></i>
+      </button>
+      </div>
+      </div>
+      <div class="box-body">
+      <div class="chart">
+      <canvas id="myChart" height="300"></canvas>
+      </div>
+      </div>
+      </div>
       </div>*@
       <!--Projects by Priority Chart END-->
 
@@ -623,169 +623,9 @@
 
 
 
-    <!--<!--Google Charts-->
-    <!--<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-
-    <script type="text/javascript">
-      google.load("visualization", "1", { packages: ["corechart"] });
-      google.setOnLoadCallback(drawChart);
-      function drawChart() {
-        $.ajax({
-          type: "POST",
-          url: "/Home/GglProjectPriority",
-          data: '{}',
-          contentType: "application/json; charset=utf-8",
-          dataType: "json",
-          success: function (result) {
-            var data = google.visualization.arrayToDataTable(result);
-
-            //3D Pie
-            var options = {
-              title: 'Project Priority',
-              is3D: true,
-              chartArea: { left: 0, bottom: 15, width: '100%', height: '100%' },
-              legend: { position: 'bottom' }
-
-            };
-
-            var chart = new google.visualization.PieChart($("#chart3D")[0]);
-            chart.draw(data, options);
-          },
-          failure: function (rresult) {
-            alert(result.d);
-          },
-          error: function (result) {
-            alert(result.d);
-          }
-        });
-      }
-    </script>
-    <script type="text/javascript">
-      google.load("visualization", "1", { packages: ["corechart"] });
-      google.setOnLoadCallback(drawChart);
-      function drawChart() {
-        $.ajax({
-          type: "POST",
-          url: "/Home/GglProjectTickets",
-          data: '{}',
-          contentType: "application/json; charset=utf-8",
-          dataType: "json",
-          success: function (result) {
-            var data = google.visualization.arrayToDataTable(result);
-
-            //Donut
-            var options = {
-              title: 'Company Ticket Distribution',
-              pieHole: 0.3,
-              chartArea: { left: 0, bottom: 15, width: '100%', height: '100%' },
-              legend: { position: 'bottom' }
-            };
-            var chart = new google.visualization.PieChart($("#donut")[0]);
-            chart.draw(data, options);
-          },
-          failure: function (rresult) {
-            alert(result.d);
-          },
-          error: function (result) {
-            alert(result.d);
-          }
-        });
-      }
-    </script>-->
-    @* Morris Donut Chart *@
-    <!--<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
-    <script>
-
-    var morrisDonutData = [{
-      label: "Low",
-      value: @Model.Tickets.Where(t=>t.TicketPriority.Name == nameof(BTTicketPriority.Low)).Count()
-    }, {
-      label: "Medium",
-      value: @Model.Tickets.Where(t=>t.TicketPriority.Name == nameof(BTTicketPriority.Medium)).Count()
-    }, {
-      label: "High",
-      value: @Model.Tickets.Where(t=>t.TicketPriority.Name == nameof(BTTicketPriority.High)).Count()
-    }, {
-      label: "Urgent",
-      value: @Model.Tickets.Where(t=>t.TicketPriority.Name == nameof(BTTicketPriority.Urgent)).Count()
-    }];
-
-
-    /*
-    Morris: Donut
-    */
-    if ($('#morrisTicketPriority').get(0)) {
-      var donutChart = Morris.Donut({
-        resize: true,
-        element: 'morrisTicketPriority',
-        data: morrisDonutData,
-        colors: ['#0088cc', '#734ba9', '#E36159', '#ff993b']
-      });
-
-      donutChart.options.data.forEach(function(label, i) {
-        var legendItem = $('<span></span>').text( label['label'] + ": " +label['value']).prepend('<span>&nbsp;</span>');
-        legendItem.find('span')
-          .css('backgroundColor', donutChart.options.colors[i])
-          .css('width', '20px')
-          .css('display', 'inline-block')
-          .css('margin', '10px');
-        $('#legend').append(legendItem)
-      });
-    };
-    </script>-->
-                          -->
-
-
     <!-- *** Begin Chart JS Pie/Donut *** -->
-    <!--<script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.0/dist/chart.min.js"></script>
-    <script>
+    <!--<script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.0/dist/chart.min.js"></script> -->
 
-    var donutChartCanvas = $('#donutChart').get(0).getContext('2d');
-    var donutData = {
-      labels: [
-        '@nameof(BTTicketStatus.Development)',
-        '@nameof(BTTicketStatus.New)',
-        '@nameof(BTTicketStatus.Resolved)',
-        '@nameof(BTTicketStatus.Testing)'
-      ],
-      datasets: [
-        {
-          data: [
-    @Model.Tickets.Where(t=> t.TicketStatus.Name == nameof(BTTicketStatus.Development)).Count(),
-    @Model.Tickets.Where(t=> t.TicketStatus.Name ==nameof(BTTicketStatus.New)).Count(),
-    @Model.Tickets.Where(t=> t.TicketStatus.Name ==nameof(BTTicketStatus.Resolved)).Count(),
-    @Model.Tickets.Where(t=> t.TicketStatus.Name ==nameof(BTTicketStatus.Testing)).Count()
-          ],
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)'
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)'
-          ]
-        }
-      ]
-    };
-
-    var donutOptions = {
-      maintainAspectRatio: false,
-      responsive: true,
-    };
-    //Create pie or douhnut chart
-    // You can switch between pie and douhnut using the method below.
-    new Chart(donutChartCanvas, {
-      type: 'doughnut',
-      data: donutData,
-      options: donutOptions
-    });
-    </script>-->
-    <!-- *** End Chart JS Donut *** -->
     <!-- Plotly Charts
      Load plotly.js into the DOM-->
     <script src='https://cdn.plot.ly/plotly-2.4.2.min.js'></script>
@@ -915,68 +755,6 @@
           }
 
 
-          // chartjs
-          //if ($('#chart_task').length > 0) {
-          //    var ctx6 = document.getElementById("chart_task").getContext("2d");
-          //    var data6 = {
-          //        labels: [
-
-          //            "@projectList[0].Name",
-          //            "@projectList[1].Name",
-          //            "@projectList[2].Name",
-          //            "@projectList[3].Name"
-          //        ],
-          //        datasets: [
-          //            {
-          //                data: [@projectList[0].Tickets.Count(), @projectList[1].Tickets.Count(), @projectList[2].Tickets.Count(), @projectList[3].Tickets.Count()],
-          //                backgroundColor: [
-          //                    "#fec107",
-          //                    "#00c292",
-          //                    "#03a9f3",
-          //                    "#ffffff",
-          //                ],
-          //                hoverBackgroundColor: [
-          //                    "rgba(254, 193, 7, 0.6)",
-          //                    "rgba(0, 194, 146, 0.6)",
-          //                    "rgba(3, 169, 243, 0.6)",
-          //                ]
-          //            }]
-          //    };
-
-          //    var pieChart = new Chart(ctx6, {
-          //        type: 'pie',
-          //        data: data6,
-          //        options: {
-          //            animation: {
-          //                duration: 3000
-          //            },
-          //            responsive: true,
-          //            maintainAspectRatio: false,
-          //            legend: {
-          //                labels: {
-          //                    fontFamily: "Poppins",
-          //                    fontColor: "#878787"
-          //                }
-          //            },
-          //            tooltip: {
-          //                backgroundColor: 'rgba(33,33,33,1)',
-          //                cornerRadius: 0,
-          //                footerFontFamily: "'Poppins'"
-          //            },
-          //            elements: {
-          //                arc: {
-          //                    borderWidth: 0
-          //                }
-          //            }
-          //        }
-          //    });
-          //}
-
-
-
-
-
-
           if ($('#chart_risk').length > 0) {
               var ctx7 = document.getElementById("chart_risk").getContext("2d");
               var data7 = {
@@ -1065,7 +843,7 @@
 
     </script>
 
-    <canvas id="myChart" width="400" height="400"></canvas>
+    @*<canvas id="myChart" width="400" height="400"></canvas>
     <script>
       const ctx = document.getElementById('myChart').getContext('2d');
       const myChart = new Chart(ctx, {
@@ -1100,7 +878,7 @@
               }
           }
       });
-    </script>
+    </script>*@
 
 }
 
