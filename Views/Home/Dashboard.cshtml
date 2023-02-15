@@ -324,10 +324,10 @@
       </div>
       <!--Ticket Priority Info End -->
       <!--Projects by Priority Chart-->
-     @* <div class=" col-12 col-md-4 rounded mt-2 mb-2">
+      <div class=" col-12 col-md-6 rounded mt-2 mb-2">
         <div class="box">
           <div class="box-header with-border">
-            <h3 class="box-title">Projects by Tickets</h3>
+            <h3 class="box-title">Tickets By Priority</h3>
 
             <div class="box-tools pull-right">
               <button type="button" class="btn btn-box-tool" data-widget="collapse">
@@ -344,7 +344,7 @@
             </div>
           </div>
         </div>
-      </div>*@
+      </div>
       <!--Projects by Priority Chart END-->
       <!--Projects by Priority Chart-->
       <div class="col-12 col-md-6 rounded mt-2 mb-2">
@@ -370,7 +370,7 @@
       </div>
       <!--Projects by Priority Chart END-->
       <!--Play Chart-->
-      <div class="col-12 col-md-6 rounded mt-2 mb-2">
+      @*<div class="col-12 col-md-6 rounded mt-2 mb-2">
         <div class="box">
           <div class="box-header with-border">
             <h3 class="box-title">Tickets By Priority</h3>
@@ -390,7 +390,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div>*@
       <!--Projects by Priority Chart END-->
 
 
@@ -734,7 +734,7 @@
       });
     };
     </script>-->
-                      -->
+                          -->
 
 
     <!-- *** Begin Chart JS Pie/Donut *** -->
@@ -857,59 +857,62 @@
                   gridTextFamily: "Poppins"
               });
 
-          //// chartjs
-          //if ($('#chart_task').length > 0) {
-          //  var ctx6 = document.getElementById("chart_task").getContext("2d");
-          //  var data6 = {
-          //    labels: [
-          //      "Completed",
-          //      "Delayed",
-          //      "Overdue"
-          //    ],
-          //    datasets: [
-          //      {
-          //        data: [200, 90, 150, 90],
-          //        backgroundColor: [
-          //          "#fec107",
-          //          "#00c292",
-          //          "#03a9f3",
-          //        ],
-          //        hoverBackgroundColor: [
-          //          "rgba(254, 193, 7, 0.6)",
-          //          "rgba(0, 194, 146, 0.6)",
-          //          "rgba(3, 169, 243, 0.6)",
-          //        ]
-          //      }]
-          //  };
+          // chartjs
+          if ($('#chart_task').length > 0) {
+              var ctx6 = document.getElementById("chart_task").getContext("2d");
+              var data6 = {
+                  labels: [
+                      "Low",
+                      "Medium",
+                      "High",
+                      "Urgent"
+                  ],
+                  datasets: [
+                      {
+                          data: [@priorityTicketLow, @priorityTicketMedium, @priorityTicketHigh, @priorityTicketUrgent],
+                          backgroundColor: [
+                              "#00c292",
+                              "#fec107",
+                              "#03a9f3",
+                              "#fb9678",
+                          ],
+                          hoverBackgroundColor: [
+                              "rgba(0, 194, 146, 0.6)",
+                              "rgba(254, 193, 7, 0.6)",
+                              "rgba(3, 169, 243, 0.6)",
+                              "rgba(251, 150, 120, 0.6)"
+                          ]
+                      }]
+              };
 
-          //  var pieChart = new Chart(ctx6, {
-          //    type: 'pie',
-          //    data: data6,
-          //    options: {
-          //      animation: {
-          //        duration: 3000
-          //      },
-          //      responsive: true,
-          //      maintainAspectRatio: false,
-          //      legend: {
-          //        labels: {
-          //          fontFamily: "Poppins",
-          //          fontColor: "#878787"
-          //        }
-          //      },
-          //      tooltip: {
-          //        backgroundColor: 'rgba(33,33,33,1)',
-          //        cornerRadius: 0,
-          //        footerFontFamily: "'Poppins'"
-          //      },
-          //      elements: {
-          //        arc: {
-          //          borderWidth: 0
-          //        }
-          //      }
-          //    }
-          //  });
-          //}
+              var pieChart = new Chart(ctx6, {
+                  type: 'pie',
+                  data: data6,
+                  options: {
+                      animation: {
+                          duration: 3000
+                      },
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      legend: {
+                          labels: {
+                              fontFamily: "Poppins",
+                              fontColor: "#878787"
+                          }
+                      },
+                      tooltip: {
+                          backgroundColor: 'rgba(33,33,33,1)',
+                          cornerRadius: 0,
+                          footerFontFamily: "'Poppins'"
+                      },
+                      elements: {
+                          arc: {
+                              borderWidth: 0
+                          }
+                      }
+                  }
+              });
+          }
 
 
           // chartjs
