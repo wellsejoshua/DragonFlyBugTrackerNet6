@@ -37,10 +37,12 @@ namespace TheBugTracker.Controllers
             int companyId = User.Identity.GetCompanyId().Value;
 
             //Get all company users
-            List<AppUser> users = await _companyInfoService.GetAllMembersAsync(companyId);
+            List<AppUser> usersNonDemo = await _rolesService.GetUsersNotInRoleAsync("DemoUser", companyId);
+            
+           
 
             //Loop over the users to populate the ViewModel
-            foreach (AppUser user in users)
+            foreach (AppUser user in usersNonDemo)
             {
                 ManageUserRolesViewModel viewModel = new();
                 viewModel.AppUser = user;
